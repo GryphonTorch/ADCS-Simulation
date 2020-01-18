@@ -1,7 +1,7 @@
 """
-CubeSat 
-Created on Fri Dec 27 18:07:13 2019
+CubeSat Attitude Determination and Control System Simulation
 @author: Yu Jun
+version 1.2: fixed missing B-field dependence; torque computed in spacecraft frame
 """
 
 import math
@@ -26,15 +26,19 @@ area = 0.001
 Kp = 0.2
 dt = 0.001 # unified throughout
 q = 1000   # data record rate (every 100th frame)
-Time = 1 # seconds
-totalSteps = int(Time/dt)
+Duration = 10 # seconds
+totalSteps = int(Duration/dt)
+
+i = np.array([1,0,0])     # unit vectors in Earth non-rotating inertial frame
+j = np.array([0,1,0]) 
+k = np.array([0,0,1]) 
 
 i0 = np.array([0,1,0])    # initial attitude of spacecraft, in inertial coord
 j0 = np.array([-1,0,0])   # these '0' vectors must be orthogonal and unit mag.
 k0 = np.cross(i0,j0)
-omegaX = 4    # Starting test values
-omegaY = 3
-omegaZ = 1
+omegaX = 0.1    # Starting test values, in spacecraft frame. rad/s
+omegaY = 0.1    # so correspond to roll/pitch/yaw
+omegaZ = 0.1
 TestData = np.array([omegaX,omegaY,omegaZ,Kp])
 
 History = []   # initialize records
@@ -59,24 +63,22 @@ for n in range(totalSteps):
     long = np.arctan2(y,x)                  # longitude; y=0 is Greenwich?  
     
     """II. Magnetic Field Calculation"""
-    Bfield = MagneticField.TiltedDipole(lat, long, r_vectorMag)
+    BfieldGCI = MagneticField.TiltedDipole(lat, long, r_vectorMag)  # in Earth non-rotating frame
+    Bfield = MagneticField.GCItoBFPAtransform(i,j,k,i0,j0,k0,BfieldGCI[0],\
+                                              BfieldGCI[1],BfieldGCI[2])
+    # transforms to satellite principal axes frame
+    # sub 0's: actual spacecraft orientation, unit vectors
     
     """III. Magnetorquer Output"""
-    # sub 0's: actual spacecraft orientation, unit vectors
     Signal = Controller.RateBasedControl(omegaX,omegaY,omegaZ,Kp)
     #Signal = Controller.RollPitchControl(i0,j0,k0,x,y,z,vx,vy,vz, Kp)    
     #RollTorque  = Signal[0]*turns*area # scalar
     #PitchTorque = Signal[1]*turns*area # exerted torque mag. in principal axes 
     
-    RollCoil  = Signal[0]*turns*area # scalar
-    RollTorque = RollCoil * np.cross(i0,Bfield)
-    
-    PitchCoil  = Signal[1]*turns*area # scalar
-    PitchTorque = PitchCoil * np.cross(j0,Bfield)
-    
+    RollTorque = Signal[0]*turns*area * np.cross([1,0,0],Bfield)    
+    # in spacecraft frame, magnetorquer aligned along [1,0,0] direction
+    PitchTorque = Signal[1]*turns*area * np.cross([0,1,0],Bfield)    
     NetTorque = RollTorque + PitchTorque # in GCI frame
-
-    '''MISSING: TRANSFORM TORQUE FROM INERTIAL TO PRINCIPAL AXES USING TRANSF MATRIX -  MIT DYNAMICS'''
 
     """IV. Numerical Integration for omegas"""
     nextOmega = Solver.EulerEqnSolver(omegaX, omegaY, omegaZ, NetTorque[0], \
