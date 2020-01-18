@@ -35,3 +35,15 @@ def TiltedDipole(lat,long, r_vectorMag):
         
     return [Bfieldx,Bfieldy,Bfieldz]
 
+def GCItoBFPAtransform(i,j,k,i0,j0,k0,x,y,z):
+    """Transforms vector x,y,z in coordinate frame with unit vectors i,j,k
+    into vector x0,y0,z0 in coordinate frame with unit vectors i0,j0,k0. 
+    Use: transform B field from Geocentric Inertial Frame to spacecraft
+    Body-Fixed Principal axes frame. See MIT Dynamics lecture for math.  
+    Outputs: new vector x0,y0,z0."""
+    
+    x0 = np.dot(i0,i)*x + np.dot(i0,j)*y + np.dot(i0,k)*z
+    y0 = np.dot(j0,i)*x + np.dot(j0,j)*y + np.dot(j0,k)*z
+    z0 = np.dot(k0,i)*x + np.dot(k0,j)*y + np.dot(k0,k)*z
+
+    return [x0,y0,z0]
