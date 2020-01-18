@@ -36,8 +36,8 @@ k = np.array([0,0,1])
 i0 = np.array([0,1,0])    # initial attitude of spacecraft, in inertial coord
 j0 = np.array([-1,0,0])   # these '0' vectors must be orthogonal and unit mag.
 k0 = np.cross(i0,j0)
-omegaX = 0.1    # Starting test values, in spacecraft frame. rad/s
-omegaY = 0.1    # so correspond to roll/pitch/yaw
+omegaX = 1    # Starting test values, in spacecraft frame. rad/s
+omegaY = 2    # so correspond to roll/pitch/yaw
 omegaZ = 0.1
 TestData = np.array([omegaX,omegaY,omegaZ,Kp])
 
@@ -70,18 +70,18 @@ for n in range(totalSteps):
     # sub 0's: actual spacecraft orientation, unit vectors
     
     """III. Magnetorquer Output"""
-    Signal = Controller.RateBasedControl(omegaX,omegaY,omegaZ,Kp)
-    #Signal = Controller.RollPitchControl(i0,j0,k0,x,y,z,vx,vy,vz, Kp)    
-    #RollTorque  = Signal[0]*turns*area # scalar
-    #PitchTorque = Signal[1]*turns*area # exerted torque mag. in principal axes 
+    '''The B-field information is used to calculate torque by working out
+    the current that gives the required torque i.e. we choose a control
+    architecture for the torque, and then there is a formula to get currents
+    that takes into account B. We must check if power usage is okay.'''
     
-    RollTorque = Signal[0]*turns*area * np.cross([1,0,0],Bfield)    
-    # in spacecraft frame, magnetorquer aligned along [1,0,0] direction
-    PitchTorque = Signal[1]*turns*area * np.cross([0,1,0],Bfield)    
-    NetTorque = RollTorque + PitchTorque # in GCI frame
+    Currents = Controller.RateFieldControl(omegaX,omegaY,omegaZ,Bfield[0],\
+                                           Bfield[1],Bfield[2],Kp,turns,area)
+    
+    NetTorque = - Kp*np.array([omegaX, omegaY, omegaZ])
 
     """IV. Numerical Integration for omegas"""
-    nextOmega = Solver.EulerEqnSolver(omegaX, omegaY, omegaZ, NetTorque[0], \
+    nextOmega = Solver.EulerEqnSolver(omegaX, omegaY, omegaZ, NetTorque[0],\
                                NetTorque[1],  NetTorque[2], Ix,Iy,Iz,dt)
     # set yaw torque (Mz) = 0 in two axis control
     omegaX = nextOmega[0]
@@ -122,7 +122,7 @@ for n in range(totalSteps):
     if (n//q)*q == n:
         Time = Time + q*dt
         Data = [Time,Pos[0],Pos[1],Pos[2],Pos[3],Pos[4],Pos[5],Bfield[0],\
-            Bfield[1],Bfield[2],RollTorque,PitchTorque,omegaX, omegaY, omegaZ]
+            Bfield[1],Bfield[2],NetTorque[0],NetTorque[1],omegaX, omegaY, omegaZ]
         History.append(Data)     # B vectors experienced
 
 print(omegaX)
