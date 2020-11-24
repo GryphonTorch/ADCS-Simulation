@@ -8,3 +8,6 @@ Updates 24 Nov 2020:
 3 - Power function includes sun to calculate dark side or not
 
 4 - Preliminary bang bang active control shows angular velocity decreasing over time
+
+
+The previous pdf documentation still describes the process in general, but certain code details have changed. I'll work on a new documentation soon. 
