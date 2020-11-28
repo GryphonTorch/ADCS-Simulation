@@ -144,7 +144,7 @@ for n in range(totalSteps):
 
     if (n//q)*q == n:                            # recording the data
         Time = Time + q*dt
-        Data = [Time,Pos[0]/1000,Pos[1]/1000,Pos[2]/1000,Pos[3]/1000,Pos[4]/1000,Pos[5]/1000,BfieldNED[0],\
+        Data = [Time,Pos[0],Pos[1],Pos[2],Pos[3],Pos[4],Pos[5],BfieldNED[0],\
             BfieldNED[1],BfieldNED[2],NetTorque[0],NetTorque[1],NetTorque[2],\
             omegaX, omegaY, omegaZ, power]
         History.append(Data)     # B vectors experienced
@@ -160,8 +160,8 @@ print("[omegaX, omegaY, omegaZ, Kp]:", TestData)
 # save data
 with open('SimulationData.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    writer.writerow(["Time (s)","x (m)", "y (m)", "z (m)", "vx (m/s)" ,\
-                     "vy (m/s)","vz (m/s)","B_North (nT)","B_East (nT)",\
+    writer.writerow(["Time (s)","x (km)", "y (km)", "z (km)", "vx (km/s)" ,\
+                     "vy (km/s)","vz (km/s)","B_North (nT)","B_East (nT)",\
                      "B_Down (nT)","RollTorque (Nm)","PitchTorque (Nm)", \
                      "YawTorque (Nm)","OmegaX (rad/s)",\
                      "OmegaY (rad/s)", "OmegaZ (rad/s)","Power (Watt)"]) 
