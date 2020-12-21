@@ -1,10 +1,9 @@
 """
 CubeSat Attitude Determination and Control System Simulation
-Version 3: Bang Bang Control with Sun added (24 Nov 2020)
+Version 3: Bang Bang Control with Sun added (reuploaded 21 Dec 2020)
 
 Orbit, omega, power outputs look reasonable
 @author: Yu Jun
-
 """
 import math
 import numpy as np
@@ -134,7 +133,7 @@ for n in range(totalSteps):
     j0 = j0new
     k0 = k0new   # put in the new values
 
-
+ 
     """ VI. Power calculation with dark side"""
     sunAngle = sunAngle + 2*np.pi/(24*60*60)*dt  # sun moves
     if sunAngle >= 2*np.pi:
@@ -151,8 +150,7 @@ for n in range(totalSteps):
     
     orbitDebug.append([x,y,z,vx,vy,vz])    
     
-'''*****======End loop======*****'''
-    
+'''*****======End loop======*****''' 
 print("Simulation done. Timestep used: ", dt, "sec. Data recorded every", q, "frames.")
 print("Total time:", dt*totalSteps, "sec")
 print("[omegaX, omegaY, omegaZ, Kp]:", TestData)
