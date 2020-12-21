@@ -25,7 +25,7 @@ def TiltedDipoleXYZ(lat,long, r_vectorMag):
               Bfield[2]*(-np.cos(lat)*np.sin(long))
     Bfieldz = Bfield[0]*np.cos(lat) - Bfield[2]*np.sin(lat)
     # nanoTesla
-    return np.array([Bfieldx*10**(-9) , Bfieldy*10**(-9) , Bfieldz*10**(-9) ])   
+    return np.array([Bfieldx, Bfieldy, Bfieldz])   
     
 def GCItoBFPAtransform(i,j,k,i0,j0,k0,x,y,z):
     """Transforms vector x,y,z in coordinate frame with unit vectors i,j,k
@@ -58,7 +58,7 @@ def TiltedDipoleNED(lat,long, r_vectorMag):
     B_east = Mat2[0] + Mat2[1] + Mat2[2]    # B_east
     Mat3 = np.multiply(B_row3, B_column)
     B_down = Mat3[0] + Mat3[1] + Mat3[2]    # B_down
-    BfieldRot = np.array([B_north,B_east,B_down])*(6378/r_vectorMag)**3*10**(-9)    # in nanoTesla       
+    BfieldRot = np.array([B_north,B_east,B_down])*(6378/r_vectorMag)**3   # in nanoTesla       
     
     return BfieldRot
 
