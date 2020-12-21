@@ -1,5 +1,5 @@
 """
-Propagator File (24 Nov 2020)
+Propagator File (21 Dec 2020)
 J6 Orbit propagator using [x,y,z,vx,vy,vz] state vector, Runge Kutta 4 integration
 For Earth orbits. Distances all in km, not meters. 
 
