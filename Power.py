@@ -12,8 +12,8 @@ def flux(long, sunAngle, i0, j0, k0):
     Output: power (Watt)
     k0 points upwards from top of satellite (solar panel exists there)"""
     
-    efficiency2 = 0.307 * 0.88 * (1 - (75-28) * 0.0022) #efficiency of Pumpkin solar panel
-    efficiency1 = 0.295 * 0.88 * (1 - (75-28) * 0.0022)
+    efficiency2 = 0.307 * 0.88 * (1 - (75-28) * 0.0022) # efficiency of Pumpkin solar panel
+    efficiency1 = 0.295 * 0.88 * (1 - (75-28) * 0.0022) # efficiency of Endurosat solar panel
     
     Area2U = 0.01076664    # Area of one 2U Pumpkin panel in m^2
     Area1U = 0.00603       # Area of one 1U Endurosat panel in m^2
