@@ -21,7 +21,7 @@ def flux(long, sunAngle, i0, j0, k0):
     
     phi = 1373*(math.cos(math.radians(23))*np.array([1,0,0])*math.cos(sunAngle) + math.cos(math.radians(23))*np.array([0,1,0])*math.sin(sunAngle)\
                 - math.sin(math.radians(23))*np.array([0,0,1])) 
-    # solar flux vector, break up x and y components using sunAngle 
+    # solar flux vector, break up x and y components using cos(sunAngle) and sin(sunAngle) respectively.  
     
     powerTop = phi.dot(k0)*Area1U
     if powerTop < 0:   # top is sunlit
