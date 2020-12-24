@@ -1,5 +1,6 @@
 """
-Controller File (24 Nov 2020)
+Controller File (24 Dec 2020)
+SI unit magnetic field strength in calculation
 Calculates output torque based on input error
 Proposed Two Axis (pitch and roll) stabilization code assuming circular orbit
 """
@@ -26,7 +27,7 @@ def nominalTorqueBFPA(OmegaX, OmegaY, OmegaZ, BfieldBFPA):
     dipoleZ = np.array([0,0,0])
     omega = np.array([OmegaX, OmegaY, OmegaZ])
 
-    dipoleX = np.cross(np.array([1,0,0]),BfieldBFPA)
+    dipoleX = np.cross(np.array([1,0,0]),BfieldBFPA)*10**(-9)
     if dipoleX.dot(omega) < -10E-7:
         TorqueX = 0.25*dipoleX        # run in +ive i0 direction
 #        print("dipoleX dot:", dipoleX.dot(omega), "+i0")
@@ -34,7 +35,7 @@ def nominalTorqueBFPA(OmegaX, OmegaY, OmegaZ, BfieldBFPA):
         TorqueX = -0.25*dipoleX       # run in -ve i0 direction
 #        print("dipoleX dot:", dipoleX.dot(omega), "-i0")
     
-    dipoleY = np.cross(np.array([0,1,0]),BfieldBFPA)
+    dipoleY = np.cross(np.array([0,1,0]),BfieldBFPA)*10**(-9)
     if dipoleY.dot(omega) < -10E-7:
         TorqueY = 0.25*dipoleY        # run in +ive i0 direction
 #        print("dipoleY dot:", dipoleY.dot(omega), "+j0")
@@ -42,7 +43,7 @@ def nominalTorqueBFPA(OmegaX, OmegaY, OmegaZ, BfieldBFPA):
         TorqueY = -0.25*dipoleY       # run in -ve i0 direction
 #        print("dipoleY dot:", dipoleY.dot(omega), "-j0")
 
-    dipoleZ = np.cross(np.array([0,0,1]),BfieldBFPA)
+    dipoleZ = np.cross(np.array([0,0,1]),BfieldBFPA)*10**(-9)
     if dipoleZ.dot(omega) < -10E-7:
         TorqueZ = 0.25*dipoleZ        # run in +ive i0 direction
 #        print("dipoleZ dot:", dipoleZ.dot(omega), "+k0")
