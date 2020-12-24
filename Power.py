@@ -19,8 +19,9 @@ def flux(long, sunAngle, i0, j0, k0):
     Area1U = 0.00603       # Area of one 1U Endurosat panel in m^2
     # using arrays for inertial i and k unit vectors
     
-    phi = 1373*(math.cos(23)*np.array([1,0,0]) - math.sin(23)*np.array([0,0,1])) 
-    # solar flux vector
+    phi = 1373*(math.cos(math.radians(23))*np.array([1,0,0])*math.cos(sunAngle) + math.cos(math.radians(23))*np.array([0,1,0])*math.sin(sunAngle)\
+                - math.sin(math.radians(23))*np.array([0,0,1])) 
+    # solar flux vector, break up x and y components using sunAngle 
     
     powerTop = phi.dot(k0)*Area1U
     if powerTop < 0:   # top is sunlit
