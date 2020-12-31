@@ -1,6 +1,6 @@
 """
 CubeSat Attitude Determination and Control System Simulation
-Version 3: Bang Bang Control with Sun added (reuploaded 21 Dec 2020)
+Version 3: Bang Bang Control with Sun added (updated 31 Dec 2020 for sun rotation)
 
 Orbit, omega, power outputs look reasonable
 @author: Yu Jun
@@ -26,9 +26,9 @@ Duration = 400*60 # seconds
 i0 = np.array([1,0,0])    # initial attitude of spacecraft, in inertial coord
 j0 = np.array([0,1,0])   # these '0' vectors must be orthogonal and unit mag.
 k0 = np.cross(i0,j0)
-omegaX = 0.2    # Starting test values, in spacecraft frame. rad/s
-omegaY = 0.1    # so correspond to roll/pitch/yaw
-omegaZ = 0.3
+omegaX = 0.0    # Starting test values, in spacecraft frame. rad/s
+omegaY = 0.13    # along the long axis
+omegaZ = 0.0
 '''========================================================'''
 
 
@@ -135,7 +135,7 @@ for n in range(totalSteps):
 
  
     """ VI. Power calculation with dark side"""
-    sunAngle = sunAngle + 2*np.pi/(24*60*60)*dt  # sun moves
+    sunAngle = sunAngle - 2*np.pi/(24*60*60)*dt  # sun revolves in opposite direction as satellite (minus sign)
     if sunAngle >= 2*np.pi:
         sunAngle = sunAngle - 2*np.pi            # keep to within 0, 2pi range
     # because at ISS inclinations the sun's 23 deg tilt won't affect coverage     
