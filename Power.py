@@ -30,7 +30,7 @@ def flux(long, sunAngle, i0, j0, k0):
         powerTop = 0
 
     powerSidei0 = efficiency2*abs(phi.dot(i0)*Area2U)  # don't double count
-    powerSidej0 = efficiency2*abs(phi.dot(j0)*Area2U)*0.75    #reduced to 1U on a side
+    powerSidej0 = efficiency2*abs(phi.dot(j0)*Area2U)*(2/3)    #one side has no panel
     
     powerAll = powerTop + powerSidei0 + powerSidej0    # before considering dark side
     
